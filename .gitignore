@@ -1,0 +1,7 @@
+# Ignore environment files and logs
+
+# Local environment configuration
+.env
+
+# logs
+*.log
