@@ -15,31 +15,15 @@ sudo apt-get install -y tinyproxy
 ```
 
 ### Настройка
-Откройте конфиг:
-
-```bash
-sudo nano /etc/tinyproxy.conf
-```
-
-Отредактируйте (или добавьте) следующие строки:
-
-```
-Listen 127.0.0.1
-Port 8080
-# Allow 127.0.0.1
-LogFile /var/log/tinyproxy.log
-```
-
-Сохраните и перезапустите сервис:
-
 ```bash
 sudo systemctl restart tinyproxy
 sudo systemctl enable tinyproxy
+sudo systemctl status tinyproxy
 ```
 
 ## 2. Проверка работы TinyProxy
 ```bash
-curl -x http://127.0.0.1:8080 http://ipinfo.io
+curl -x http://127.0.0.1:8888 http://ipinfo.io
 ```
 Если вывод содержит ваш серверный IP – всё работает.
 
@@ -47,20 +31,20 @@ curl -x http://127.0.0.1:8080 http://ipinfo.io
 На локальном компьютере выполните:
 
 ```bash
-ssh -L 8080:localhost:8080 user@remote
+ssh -L 8888:localhost:8888 user@remote
 ```
 Замена `user@remote` на актуальные данные.
 
-> После запуска этого порты `127.0.0.1:8080` на локальной машине будут проксировать трафик через сервер.
+> После запуска этого порты `127.0.0.1:8888` на локальной машине будут проксировать трафик через сервер.
 
 ## 4. Настройка приложений
 ### В браузере
-Перейдите в настройки → Сеть → Прокси → HTTP. Укажите `127.0.0.1` и порт `8080`.
+Перейдите в настройки → Сеть → Прокси → HTTP. Укажите `127.0.0.1` и порт `8888`.
 
 ### В командной строке (Linux/Windows)
 ```bash
-export http_proxy="http://127.0.0.1:8080"
-export https_proxy="http://127.0.0.1:8080"
+export http_proxy="http://127.0.0.1:8888"
+export https_proxy="http://127.0.0.1:8888"
 ```
 Запускайте приложения в такой же оболочке.
 
@@ -91,12 +75,12 @@ sudo apt-get install -y tinyproxy
 cat <<'EOF' | sudo tee /etc/tinyproxy.conf > /dev/null
 # TinyProxy – минимальный HTTP/HTTPS прокси
 Listen 127.0.0.1
-Port 8080
+Port 8888
 # TinyProxy не экспортирует наружу, поэтому не нужно открывать порт в UFW.
 LogFile /var/log/tinyproxy.log
 EOF
 
-# Порт 8080 слушается только на localhost, поэтому открывать его через UFW не требуется.
+# Порт 8888 слушается только на localhost, поэтому открывать его через UFW не требуется.
 
 # Перезапускаем сервис
 sudo systemctl daemon-reload
@@ -126,8 +110,8 @@ set -e
 
 REMOTE_USER="user"
 REMOTE_HOST="remote"
-REMOTE_PORT="8080"
-LOCAL_PORT="8080"
+REMOTE_PORT="8888"
+LOCAL_PORT="8888"
 
 ssh -N -L ${LOCAL_PORT}:localhost:${REMOTE_PORT} ${REMOTE_USER}@${REMOTE_HOST}
 ```
@@ -145,5 +129,5 @@ ssh -N -L ${LOCAL_PORT}:localhost:${REMOTE_PORT} ${REMOTE_USER}@${REMOTE_HOST}
 
 1. На сервере выполнить `./setup_server.sh`.
 2. На локальном компьютере открыть SSH‑туннель (можно через `./start_tunnel.sh`).
-3. Настроить приложения на прокси `127.0.0.1:8080`.
+3. Настроить приложения на прокси `127.0.0.1:8888`.
 4. Работайте, наслаждайтесь проксированным соединением!
